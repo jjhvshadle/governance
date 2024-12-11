@@ -1,0 +1,49 @@
+# Print the most recent file path
+cat("Opening most recent SQLite file:", most_recent_file, "\n")
+
+# Open a connection to the most recent SQLite file
+conn <- dbConnect(RSQLite::SQLite(), most_recent_file)
+
+# Check if "nodes" table exists
+tables <- dbListTables(conn)
+if ("nodes" %in% tables) {
+  
+  # Query the "nodes" table for unique node_name and attribute_name combinations
+  query_unique <- "SELECT DISTINCT node_name, attribute_name FROM nodes"
+  unique_nodes_df <- dbGetQuery(conn, query_unique)
+
+  # Save the unique rows to a CSV file
+  csv_file_unique <- paste0(dir_path, "/", "unique_nodes_data_", Sys.Date(), ".csv")
+  write_csv(unique_nodes_df, file = csv_file_unique)
+  cat("Unique nodes data saved to:", csv_file_unique, "\n")
+
+  # Query the "nodes" table for rows where node_name and attribute_name match specific conditions
+  # src nodes
+  query_src <- "SELECT * 
+                FROM nodes 
+                WHERE (node_name = 'script' AND attribute_name = 'id') 
+                  OR (node_name = 'iframe' AND attribute_name = 'id') 
+                  OR (node_name = 'img' AND attribute_name = 'id')"
+  nodes_df <- dbGetQuery(conn, query_src)
+
+  # Save the result to a CSV file
+  csv_file_src <- paste0(dir_path, "/", "nodes_src_data_", Sys.Date(), ".csv")
+  write_csv(nodes_df, file = csv_file_src)
+  cat("Filtered nodes data saved to:", csv_file_src, "\n")
+  # form nodes
+  query_form <- "SELECT * 
+                FROM nodes 
+                WHERE (node_name = 'form' AND attribute_name = 'id')"
+  form_nodes_df <- dbGetQuery(conn, query_form)
+
+  # Save the result to a CSV file
+  csv_file_src <- paste0(dir_path, "/", "nodes_form_data_", Sys.Date(), ".csv")
+  write_csv(form_nodes_df, file = csv_file_src)
+  cat("Filtered nodes data saved to:", csv_file_src, "\n")
+} else {
+  cat("The table 'nodes' does not exist in the database.\n")
+}
+
+# Disconnect when done
+dbDisconnect(conn)
+cat("Connection closed.\n")
