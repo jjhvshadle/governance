@@ -49,6 +49,13 @@ if ("cookies" %in% tables) {
   # Read the "cookies" table
   cookies_df <- dbReadTable(conn, "cookies")
   
+  # Check if "scan_date" column exists
+  if (!"scan_date" %in% colnames(cookies_df)) {
+    # Add "scan_date" column with the current date
+    cookies_df$scan_date <- Sys.Date()
+    cat("Added 'scan_date' column to the 'cookies' table.\n")
+  }
+
   # Save the "cookies" table to a CSV file
   csv_file <- paste0(dir_path, "/", "cookie_data_", Sys.Date(), ".csv")
   write_csv(cookies_df, file = csv_file)
