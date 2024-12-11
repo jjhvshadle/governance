@@ -1,0 +1,28 @@
+source("https://raw.githubusercontent.com/jjhvshadle/governance/refs/heads/main/get_oneDrivePath")
+
+# Define the directory path
+dir_path <- paste0(oneDrivePath, "/Governance/g_data")
+
+# Expand the home directory path
+dir_path <- path.expand(dir_path)
+
+# List all files in the directory
+all_files <- list.files(dir_path, full.names = TRUE)
+
+# Filter files with "raw_data_" in their names and ending with .sqlite
+raw_data_files <- grep("raw_data_\\d{4}-\\d{2}-\\d{2}\\.sqlite$", all_files, value = TRUE)
+
+# If no files are found, stop the script
+if (length(raw_data_files) == 0) {
+  stop("No matching SQLite files found in the directory.")
+}
+
+# Extract dates from filenames
+file_dates <- as.Date(
+  sub(".*raw_data_(\\d{4}-\\d{2}-\\d{2})\\.sqlite$", "\\1", raw_data_files),
+  format = "%Y-%m-%d"
+)
+
+
+# Find the most recent file
+most_recent_file <- raw_data_files[which.max(file_dates)]
