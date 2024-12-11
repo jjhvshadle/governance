@@ -12,6 +12,12 @@ if ("nodes" %in% tables) {
   query_unique <- "SELECT DISTINCT node_name, attribute_name FROM nodes"
   unique_nodes_df <- dbGetQuery(conn, query_unique)
 
+  # Add scan_date if it does not exist
+  if (!"scan_date" %in% colnames(unique_nodes_df)) {
+    unique_nodes_df$scan_date <- Sys.Date()
+    cat("Added 'scan_date' column to unique nodes data.\n")
+  }
+  
   # Save the unique rows to a CSV file
   csv_file_unique <- paste0(dir_path, "/", "unique_nodes_data_", Sys.Date(), ".csv")
   write_csv(unique_nodes_df, file = csv_file_unique)
@@ -26,6 +32,12 @@ if ("nodes" %in% tables) {
                   OR (node_name = 'img' AND attribute_name = 'id')"
   nodes_df <- dbGetQuery(conn, query_src)
 
+  # Add scan_date if it does not exist
+  if (!"scan_date" %in% colnames(nodes_df)) {
+    nodes_df$scan_date <- Sys.Date()
+    cat("Added 'scan_date' column to src nodes data.\n")
+  }
+
   # Save the result to a CSV file
   csv_file_src <- paste0(dir_path, "/", "nodes_src_data_", Sys.Date(), ".csv")
   write_csv(nodes_df, file = csv_file_src)
@@ -35,6 +47,12 @@ if ("nodes" %in% tables) {
                 FROM nodes 
                 WHERE (node_name = 'form' AND attribute_name = 'id')"
   form_nodes_df <- dbGetQuery(conn, query_form)
+
+  # Add scan_date if it does not exist
+  if (!"scan_date" %in% colnames(form_nodes_df)) {
+    form_nodes_df$scan_date <- Sys.Date()
+    cat("Added 'scan_date' column to form nodes data.\n")
+  }
 
   # Save the result to a CSV file
   csv_file_src <- paste0(dir_path, "/", "nodes_form_data_", Sys.Date(), ".csv")
