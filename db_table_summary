@@ -1,0 +1,55 @@
+# Print the most recent file path
+cat("Opening most recent SQLite file:", most_recent_file, "\n")
+
+# Open a connection to the most recent SQLite file
+conn <- dbConnect(RSQLite::SQLite(), most_recent_file)
+
+# List all tables in the database
+tables <- dbListTables(conn)
+
+# Initialize an empty data frame to store results
+results_df <- data.frame(
+  table_name = character(),
+  column_name = character(),
+  total_rows = numeric(),
+  unique_values = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (tbl in tables) {
+  # Get column names
+  columns <- dbListFields(conn, tbl)
+  
+  # Read the entire table
+  df <- dbReadTable(conn, tbl)
+  
+  # Total rows in the table
+  total_rows <- nrow(df)
+  
+  # For each column, count unique values
+  for (col in columns) {
+    unique_count <- df %>% select(all_of(col)) %>% distinct() %>% nrow()
+    
+    # Append to results_df
+    results_df <- rbind(
+      results_df,
+      data.frame(
+        table_name = tbl,
+        column_name = col,
+        total_rows = total_rows,
+        unique_values = unique_count,
+        stringsAsFactors = FALSE
+      )
+    )
+  }
+}
+
+# Disconnect when done
+dbDisconnect(conn)
+cat("Connection closed.\n")
+
+# Display the results in a data table
+datatable(results_df, options = list(pageLength = 25))
+
+csv_file <- paste0(dir_path, "/", Sys.Date(), "_DB_Table_Summary.csv")
+write_csv(results_df, file = csv_file)
