@@ -44,6 +44,19 @@ for (tbl in tables) {
   }
 }
 
+# Check if "cookies" table exists
+if ("cookies" %in% tables) {
+  # Read the "cookies" table
+  cookies_df <- dbReadTable(conn, "cookies")
+  
+  # Save the "cookies" table to a CSV file
+  csv_file <- paste0(dir_path, "/", "cookie_data_", Sys.Date(), ".csv")
+  write_csv(cookies_df, file = csv_file)
+  cat("Cookies table saved to:", csv_file, "\n")
+} else {
+  cat("The table 'cookies' does not exist in the database.\n")
+}
+
 # Disconnect when done
 dbDisconnect(conn)
 cat("Connection closed.\n")
