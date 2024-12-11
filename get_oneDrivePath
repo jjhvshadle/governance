@@ -1,0 +1,8 @@
+################ Get path to OneDrive ###########################################
+oneDrivePath <- Sys.getenv("OneDriveCommercial")
+if (oneDrivePath == "") {
+  oneDrivePath <- Sys.getenv("OneDrive")
+}
+if (oneDrivePath == "") {
+  stop("OneDrive path not found. Please ensure OneDrive is installed and environment variables are set.")
+}
