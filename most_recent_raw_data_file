@@ -26,3 +26,35 @@ file_dates <- as.Date(
 
 # Find the most recent file
 most_recent_file <- raw_data_files[which.max(file_dates)]
+
+# Specify the SQLite file name
+sqlite_file <- most_recent_file
+
+# Extract the scan date from the file name
+scan_date <- gsub(".*_(\\d{4}-\\d{2}-\\d{2})\\.sqlite", "\\1", sqlite_file)
+
+# Connect to the SQLite database
+con <- dbConnect(RSQLite::SQLite(), sqlite_file)
+
+# Get the list of tables in the database
+tables <- dbListTables(con)
+
+# Iterate through each table
+for (table in tables) {
+  # Check if the 'scan_date' column already exists
+  columns <- dbListFields(con, table)
+  if (!"scan_date" %in% columns) {
+    # Add the 'scan_date' column to the table
+    alter_query <- paste0("ALTER TABLE ", table, " ADD COLUMN scan_date TEXT")
+    dbExecute(con, alter_query)
+
+    # Update the 'scan_date' column with the extracted date
+    update_query <- paste0("UPDATE ", table, " SET scan_date = '", scan_date, "'")
+    dbExecute(con, update_query)
+  }
+}
+
+# Disconnect from the database
+dbDisconnect(con)
+
+cat("Scan date column added and updated for all tables.")
