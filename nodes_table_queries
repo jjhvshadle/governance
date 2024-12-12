@@ -39,9 +39,10 @@ if ("nodes" %in% tables) {
   }
 
   # Save the result to a CSV file
-  csv_file_src <- paste0(dir_path, "/", "nodes_src_data_", Sys.Date(), ".csv")
+  csv_file_src <- paste0(dir_path, "/", "all_scripts_df_", Sys.Date(), ".csv")
   write_csv(nodes_df, file = csv_file_src)
   cat("Filtered nodes data saved to:", csv_file_src, "\n")
+  
   # form nodes
   query_form <- "SELECT * 
                 FROM nodes 
