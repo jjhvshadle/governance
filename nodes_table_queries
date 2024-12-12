@@ -32,6 +32,11 @@ if ("nodes" %in% tables) {
                   OR (node_name = 'img' AND attribute_name = 'src')"
   nodes_df <- dbGetQuery(conn, query_src)
 
+  # Create separate columns for each type of src
+  nodes_df$script_src <- ifelse(nodes_df$node_name == 'script' & nodes_df$attribute_name == 'src', nodes_df$attribute_value, NA)
+  nodes_df$iframe_src <- ifelse(nodes_df$node_name == 'iframe' & nodes_df$attribute_name == 'src', nodes_df$attribute_value, NA)
+  nodes_df$img_src <- ifelse(nodes_df$node_name == 'img' & nodes_df$attribute_name == 'src', nodes_df$attribute_value, NA)
+  
   # Add scan_date if it does not exist
   if (!"scan_date" %in% colnames(nodes_df)) {
     nodes_df$scan_date <- Sys.Date()
