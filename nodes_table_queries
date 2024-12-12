@@ -27,9 +27,9 @@ if ("nodes" %in% tables) {
   # src nodes
   query_src <- "SELECT * 
                 FROM nodes 
-                WHERE (node_name = 'script' AND attribute_name = 'id') 
-                  OR (node_name = 'iframe' AND attribute_name = 'id') 
-                  OR (node_name = 'img' AND attribute_name = 'id')"
+                WHERE (node_name = 'script' AND attribute_name = 'src') 
+                  OR (node_name = 'iframe' AND attribute_name = 'src') 
+                  OR (node_name = 'img' AND attribute_name = 'src')"
   nodes_df <- dbGetQuery(conn, query_src)
 
   # Add scan_date if it does not exist
