@@ -1,0 +1,9 @@
+get_recent_friday <- function() {
+  today <- Sys.Date()
+  days_since_friday <- as.numeric(format(today, "%u")) - 5
+  if (days_since_friday < 0) days_since_friday <- days_since_friday + 7
+  return(today - days_since_friday)
+}
+
+# Define the output SQLite file with the most recent Friday's date
+#usage: recent_friday <- get_recent_friday()
