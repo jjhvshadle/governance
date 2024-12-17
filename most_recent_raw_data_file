@@ -9,23 +9,23 @@ dir_path <- path.expand(dir_path)
 # List all files in the directory
 all_files <- list.files(dir_path, full.names = TRUE)
 
-# Filter files with "raw_data_" in their names and ending with .sqlite
-raw_data_files <- grep("raw_data_\\d{4}-\\d{2}-\\d{2}\\.sqlite$", all_files, value = TRUE)
+# Filter files with "raw_data_complete_" in their names and ending with .sqlite
+raw_data_complete_files <- grep("raw_data_complete_\\d{4}-\\d{2}-\\d{2}\\.sqlite$", all_files, value = TRUE)
 
 # If no files are found, stop the script
-if (length(raw_data_files) == 0) {
+if (length(raw_data_complete_files) == 0) {
   stop("No matching SQLite files found in the directory.")
 }
 
 # Extract dates from filenames
 file_dates <- as.Date(
-  sub(".*raw_data_(\\d{4}-\\d{2}-\\d{2})\\.sqlite$", "\\1", raw_data_files),
+  sub(".*raw_data_complete_(\\d{4}-\\d{2}-\\d{2})\\.sqlite$", "\\1", raw_data_complete_files),
   format = "%Y-%m-%d"
 )
 
 
 # Find the most recent file
-most_recent_file <- raw_data_files[which.max(file_dates)]
+most_recent_file <- raw_data_complete_files[which.max(file_dates)]
 
 # Specify the SQLite file name
 sqlite_file <- most_recent_file
