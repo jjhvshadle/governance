@@ -27,9 +27,12 @@ if ("nodes" %in% tables) {
   # src nodes
   query_src <- "SELECT * 
                 FROM nodes 
-                WHERE (node_name = 'script' AND attribute_name = 'src') 
+                WHERE ((node_name = 'script' AND attribute_name = 'src') 
                   OR (node_name = 'iframe' AND attribute_name = 'src') 
-                  OR (node_name = 'img' AND attribute_name = 'src')"
+                  OR (node_name = 'img' AND attribute_name = 'src'))
+                  AND LOWER(attribute_value) NOT LIKE '%media/themes/mho/medstar%'
+                  AND LOWER(attribute_value) NOT LIKE '%media/project/mho%'
+                  AND LOWER(attribute_value) NOT LIKE '%fonts.gstatic%'"
   nodes_df <- dbGetQuery(conn, query_src)
 
   # Create separate columns for each type of src
