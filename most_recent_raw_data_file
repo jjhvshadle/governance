@@ -1,3 +1,5 @@
+#Identifies the most recent raw_data_complete sqlite file, adds the scan_date column to each data tabel according to the date in the file name
+
 source("https://raw.githubusercontent.com/jjhvshadle/governance/refs/heads/main/get_oneDrivePath")
 
 # Define the directory path
