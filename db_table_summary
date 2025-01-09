@@ -1,3 +1,5 @@
+#identifies the metadata from the most recent sqlite file 
+#dependancy most_recent_raw_data_file
 # Print the most recent file path
 cat("Opening most recent SQLite file:", most_recent_file, "\n")
 
