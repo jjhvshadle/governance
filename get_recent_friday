@@ -1,3 +1,4 @@
+#function to identify the most recent friday in accordance with the current date
 get_recent_friday <- function() {
   today <- Sys.Date()
   days_since_friday <- as.numeric(format(today, "%u")) - 5
